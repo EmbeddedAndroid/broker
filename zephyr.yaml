@@ -12,6 +12,13 @@ spec:
       imagePullPolicy: Always
       stdin: true
       tty: true
+      env:
+      - name: ZEPHYR_SOURCE
+        value: SRC
+      - name: ZEPHYR_BUILD_ID
+        value: BUILD_ID
+      - name: ZEPHYR_PLATFORM
+        value: PLATFORM
       volumeMounts:
       - name: nfs
         mountPath: "/mnt/artifacts"

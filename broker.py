@@ -17,13 +17,22 @@ def broker():
             print 'Received Message: %s from %s' % (work['message'], work['id'])
             print 'Publishing Message'
             broker_publisher.send_json(work)
-        if 'command' in work and 'build' in work and 'src' in work and 'key' in work:
+        if 'command' in work and 'build' in work and 'src' in work and 'platform' in work:
             print 'Command Received'
             if 'start' == work['command']:
                 api = pykube.HTTPClient(pykube.KubeConfig.from_service_account())
                 with open('zephyr.yaml', 'r') as r:
                     raw = r.read()
                     pod = yaml.load(raw)
+                    for section in pod['spec']['containers']:
+                        if 'env' in section:
+                            for env_v in section['env']:
+                                if 'ZEPHYR_SOURCE' in env_v['name']:
+                                    env_v['value'] = work['src']
+                                elif 'ZEPHYR_BUILD_ID' in env_v['name']:
+                                    env_v['value'] = work['build']
+                                elif 'ZEPHYR_PLATFORM' in env_v['name']:
+                                    env_v['value'] = work['platform']
                     pykube.Pod(api, pod).create()
                     print 'Pod Created'
 

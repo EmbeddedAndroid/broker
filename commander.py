@@ -3,12 +3,12 @@ import argparse
 
 __version__ = 1.0
 
-def logger(server, port, command, build, src, key):
+def logger(server, port, command, build, src, platform):
     context = zmq.Context()
     zmq_socket = context.socket(zmq.PUSH)
     uri = 'tcp://%s:%s' % (server, port)
     zmq_socket.connect(uri)
-    message = { 'command': command, 'build': build, 'src': src, 'key': key }
+    message = { 'command': command, 'build': build, 'src': src, 'platform': platform }
     zmq_socket.send_json(message)
 
 def log():
@@ -19,9 +19,9 @@ def log():
     parser.add_argument('-c', '--command', help='Command to send', required=True)
     parser.add_argument('-b', '--build', help='Build ID', required=True)
     parser.add_argument('-sc', '--src', help='Source Code URI', required=True)
-    parser.add_argument('-k', '--key', help='Key to use', required=True)
+    parser.add_argument('-p', '--platform', help='Platform to build', required=True)
     args = parser.parse_args()
-    logger(args.server, args.port, args.command, args.build, args.src, args.key)
+    logger(args.server, args.port, args.command, args.build, args.src, args.platform)
 
 if __name__ == '__main__':
     log()
