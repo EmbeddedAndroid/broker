@@ -7,9 +7,12 @@ __version__ = 1.0
 def subscriber(server, port):
     context = zmq.Context()
     subscriber = context.socket(zmq.SUB)
-    subscriber.connect("tcp://%s:%s")
+    subscriber.setsockopt(zmq.SUBSCRIBE, '')
+    subscriber.connect("tcp://%s:%s" % (server, port))
     while True:
-        data = subscriber.recv()
+        work = subscriber.recv_json()
+        if 'message' in work and 'id' in work:
+            print 'Received Message: %s from %s' % (work['message'], work['id'])
         time.sleep(1)
 
 def subscribe():
