@@ -13,7 +13,7 @@ def broker():
         work = broker_receiver.recv_json()
         if 'message' in work and 'id' in work:
             print 'Received Message: %s from %s' % (work['message'], work['id'])
-            broker_publisher.send(1, work)
+            broker_publisher.send("%s %s" % (work['id'], work['message']))
         if 'command' in work:
             print 'Command Received'
 
