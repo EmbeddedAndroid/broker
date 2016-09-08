@@ -19,7 +19,7 @@ def log():
     parser.add_argument('-c', '--command', help='Command to send', required=True)
     parser.add_argument('-b', '--build', help='Build ID', required=True)
     parser.add_argument('-sc', '--src', help='Source Code URI', required=True)
-    parser.add_argument('-p', '--platform', help='Platform to build', required=True)
+    parser.add_argument('-zp', '--platform', help='Platform to build', required=True)
     args = parser.parse_args()
     logger(args.server, args.port, args.command, args.build, args.src, args.platform)
 
