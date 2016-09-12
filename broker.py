@@ -1,6 +1,6 @@
 import zmq
 import yaml
-import pykube
+#import pykube
 
 def broker():
     context = zmq.Context()
@@ -13,8 +13,10 @@ def broker():
     
     while True:
         work = broker_receiver.recv_json()
-        if 'message' in work and 'id' in work:
-            print 'Received Message: %s from %s' % (work['message'], work['id'])
+        fields = ['type', 'id', 'status', 'message']
+        if all(field in fields for field in work):
+            print 'Received Message: Type: %s Status:' \
+            ' %s %s from %s' % (work['type'], work['status'], work['message'], work['id'])
             print 'Publishing Message'
             broker_publisher.send_json(work)
         if 'command' in work and 'build' in work and 'src' in work and 'platform' in work:
