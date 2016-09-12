@@ -1,6 +1,6 @@
 import zmq
 import yaml
-#import pykube
+import pykube
 
 def broker():
     context = zmq.Context()
@@ -10,16 +10,18 @@ def broker():
     # publish work
     broker_publisher = context.socket(zmq.PUB)
     broker_publisher.bind("tcp://*:5556")
+
+    msg_fields = ['type', 'id', 'status', 'message']
+    cmd_fields = ['command', 'build', 'src', 'platform']
     
     while True:
         work = broker_receiver.recv_json()
-        fields = ['type', 'id', 'status', 'message']
-        if all(field in fields for field in work):
+        if all(msg_field in msg_fields for msg_field in work):
             print 'Received Message: Type: %s Status:' \
             ' %s %s from %s' % (work['type'], work['status'], work['message'], work['id'])
             print 'Publishing Message'
             broker_publisher.send_json(work)
-        if 'command' in work and 'build' in work and 'src' in work and 'platform' in work:
+        if all(cmd_field in cmd_fields for cmd_field in work):
             print 'Command Received'
             if 'start' == work['command']:
                 api = pykube.HTTPClient(pykube.KubeConfig.from_service_account())
