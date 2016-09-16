@@ -19,10 +19,10 @@ spec:
       - name: ZEPHYR_PLATFORM
         value: PLATFORM
       volumeMounts:
-      - name: nfs
+      - name: storage
         mountPath: "/mnt/artifacts"
   volumes:
-  - name: nfs
+  - name: storage
     persistentVolumeClaim:
       claimName: nfs
   restartPolicy: Never
