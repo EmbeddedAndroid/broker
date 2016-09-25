@@ -9,7 +9,6 @@ spec:
   containers:
     - name: zephyr-builder
       image: forcedinductionz/ubuntu-zephyr:las16
-      imagePullPolicy: Always
       stdin: true
       tty: true
       env:
